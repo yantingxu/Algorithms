@@ -17,6 +17,13 @@ void insertion_sort(int* nums, int n)
     }
 }
 
+void swap(int* i, int* j)
+{
+    *i = *i ^ *j;
+    *j = *i ^ *j;
+    *i = *i ^ *j;
+}
+
 int main(void)
 {
     int nums[7] = {3, 1, 6, 3, 45, 6, 7};
