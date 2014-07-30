@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<stdbool.h>
 
 struct TreeNode {
     int value;
@@ -96,8 +97,29 @@ void inorder_walk(struct TreeNode* root)
     }
 }
 
+bool contain_substructure(struct TreeNode* tree1, struct TreeNode* tree2)
+{
+    if (tree2 == NULL)
+        return true;
+    if (tree1 == NULL)
+        return false;
+
+    bool contain = false;
+    if (tree1->value == tree2->value) {
+         contain = contain_substructure(tree1->left, tree2->left) && contain_substructure(tree1->right, tree2->right);
+    }
+    if (!contain && tree1->left != NULL) {
+        contain = contain_substructure(tree1->left, tree2);
+    }
+    if (!contain && tree1->right != NULL) {
+        contain = contain_substructure(tree1->right, tree2);
+    }
+    return contain;
+}
+
 int main(void)
 {
+    /*
     int inorders[] = {4, 7, 2, 1, 5, 3, 8, 6};
     int preorders[] = {1, 2, 4, 7, 3, 5, 6, 8};
     struct TreeNode* root = rebuilt_tree(preorders, 0, 7, inorders, 0, 7);
@@ -105,6 +127,24 @@ int main(void)
     printf("\n");
     inorder_walk(root);
     printf("\n");
+    */
+    int inorders_tree1[] = {9, 8, 4, 2, 7, 18, 17};
+    int preorders_tree1[] = {18, 8, 9, 2, 4, 7, 17};
+    struct TreeNode* tree1 = rebuilt_tree(preorders_tree1, 0, 6, inorders_tree1, 0, 6);
+    preorder_walk(tree1);
+    printf("\n");
+    inorder_walk(tree1);
+    printf("\n");
+
+    int inorders_tree2[] = {9, 8, 2};
+    int preorders_tree2[] = {8, 9, 2};
+    struct TreeNode* tree2 = rebuilt_tree(preorders_tree2, 0, 2, inorders_tree2, 0, 2);
+    preorder_walk(tree2);
+    printf("\n");
+    inorder_walk(tree2);
+    printf("\n");
+
+    printf("Contain: %d\n", contain_substructure(tree1, tree2));
 }
 
 

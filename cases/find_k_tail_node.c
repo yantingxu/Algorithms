@@ -1,30 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#define CAPACITY 20
-
 struct ListNode {
     int value;
     struct ListNode* next;
 };
-
-int stack[CAPACITY];
-int top = 0;
-
-void reverse_print_list(struct ListNode* head)
-{
-    if (head == NULL) {
-        return;
-    }
-    struct ListNode* p = head;
-    while (p != NULL) {
-        stack[top++] = p->value;
-        p = p->next;
-    }
-    while (top > 0) {
-        printf("%d\n", stack[--top]);
-    }
-}
 
 struct ListNode* make_sample_list(int* nums, int n)
 {
@@ -54,34 +34,40 @@ void print_list(struct ListNode* head)
     printf("\n");
 }
 
-struct ListNode* reverse_list(struct ListNode* head)
+struct ListNode* find_k_tail_node(struct ListNode* head, unsigned int k)
 {
-    struct ListNode* current = head;
-    if (current == NULL)
+    if (head == NULL)
         return NULL;
-    struct ListNode* next = head->next;
-    if (next == NULL)
-        return current;
-    struct ListNode* prev = NULL;
-    while (1) {
-        current->next = prev;
-        if (next == NULL)
-            break;
-        prev = current;
-        current = next;
-        next = next->next;
+    if (k == 0)
+        return NULL;
+
+    struct ListNode* slow = head;
+    struct ListNode* fast = head;
+    for (int i = 0; i < k-1; i++) {
+        fast = fast->next;
+        if (fast == NULL) {
+            return NULL;
+        }
     }
-    return current;
+    while (fast->next != NULL) {
+        fast = fast->next;
+        slow = slow->next;
+    }
+    return slow;
 }
 
 int main(void)
 {
     int nums[] = {1, 2, 3, 4, 5, 6};
     struct ListNode* head = make_sample_list(nums, 6);
-    // reverse_print_list(head);
     print_list(head);
-    head = reverse_list(head);
-    print_list(head);
+
+    struct ListNode* ktail = find_k_tail_node(head, 3);
+    printf("%d\n", ktail->value);
+    ktail = find_k_tail_node(head, 6);
+    printf("%d\n", ktail->value);
+    ktail = find_k_tail_node(head, 1);
+    printf("%d\n", ktail->value);
 }
 
 
